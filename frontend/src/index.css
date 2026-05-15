@@ -1,0 +1,129 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0d1a;
+  --bg2: #13132b;
+  --bg3: #1a1a35;
+  --card: rgba(255,255,255,0.04);
+  --border: rgba(168,148,255,0.2);
+  --border2: rgba(168,148,255,0.4);
+  --purple: #a894ff;
+  --purple2: #c4b5fd;
+  --teal: #5eead4;
+  --pink: #f9a8d4;
+  --coral: #fb7185;
+  --text: #e2e0f0;
+  --text2: #a09bbf;
+  --text3: #6b6685;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --glow: 0 0 20px rgba(168,148,255,0.15);
+  --glow2: 0 0 40px rgba(168,148,255,0.25);
+  --radius: 12px;
+  --radius2: 20px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(168,148,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(94,234,212,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(249,168,212,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root { position: relative; z-index: 1; }
+
+.card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius2);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--glow);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover { border-color: var(--border2); box-shadow: var(--glow2); }
+
+input, textarea, select {
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 14px;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+input:focus, textarea:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(168,148,255,0.15);
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  cursor: pointer; border: none; transition: all 0.2s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple), #7c6ddd);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(168,148,255,0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(168,148,255,0.4); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-ghost {
+  background: transparent; color: var(--text2);
+  border: 0.5px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+.btn-danger { background: rgba(248,113,113,0.15); color: var(--danger); border: 0.5px solid rgba(248,113,113,0.3); }
+.btn-teal { background: rgba(94,234,212,0.15); color: var(--teal); border: 0.5px solid rgba(94,234,212,0.3); }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500;
+}
+.badge-purple { background: rgba(168,148,255,0.15); color: var(--purple2); }
+.badge-teal { background: rgba(94,234,212,0.15); color: var(--teal); }
+.badge-pink { background: rgba(249,168,212,0.15); color: var(--pink); }
+.badge-success { background: rgba(74,222,128,0.15); color: var(--success); }
+.badge-danger { background: rgba(248,113,113,0.15); color: var(--danger); }
+.badge-warning { background: rgba(251,191,36,0.15); color: var(--warning); }
+
+.error-msg { color: var(--danger); font-size: 13px; margin-top: 6px; }
+.success-msg { color: var(--success); font-size: 13px; margin-top: 6px; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+.stars {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 85% 50%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 25%, rgba(168,148,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 75%, rgba(94,234,212,0.6) 0%, transparent 100%);
+}
