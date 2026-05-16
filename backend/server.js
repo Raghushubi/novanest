@@ -14,40 +14,42 @@ const securityRoutes = require('./routes/security');
 const app = express();
 
 // =============================================
-// SECURITY MIDDLEWARE (Helmet + CORS + Rate limiting)
+// SECURITY MIDDLEWARE
 // =============================================
 
-// Helmet sets 11 security-related HTTP headers
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
-}));
+// Helmet sets security-related HTTP headers
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
 
-// CORS: only allow our frontend origin
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
-}));
+// CORS configuration
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+  })
+);
 
-// Rate limiting — global: 100 req/15min per IP
+// Global rate limiter only
+// (Login-specific limiter removed for smoother demo recording)
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: { error: 'Too many requests from this IP, please try again later.' },
+  message: {
+    error: 'Too many requests from this IP, please try again later.',
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });
+
 app.use(globalLimiter);
 
-// Stricter rate limit on auth endpoints — 10 attempts / 15 min
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: { error: 'Too many login attempts. Please wait 15 minutes.' },
-});
-
-app.use(express.json({ limit: '10kb' })); // Limit body size
+// Body parsing
+app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
@@ -57,14 +59,23 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // =============================================
 // ROUTES
 // =============================================
-app.use('/api/auth', authLimiter, authRoutes);
+
+// Auth routes WITHOUT strict auth limiter
+app.use('/api/auth', authRoutes);
+
 app.use('/api/notes', notesRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/security', securityRoutes);
 
-// Health check
+// =============================================
+// HEALTH CHECK
+// =============================================
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', app: 'NovaNest', security: 'Helmet + JWT + bcrypt + input validation + rate limiting' });
+  res.json({
+    status: 'ok',
+    app: 'NovaNest',
+    security: 'Helmet + JWT + bcrypt + input validation',
+  });
 });
 
 // =============================================
@@ -72,12 +83,23 @@ app.get('/api/health', (req, res) => {
 // =============================================
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
+
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal server error',
+  });
 });
 
+// =============================================
+// SERVER START
+// =============================================
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`\n🚀 NovaNest backend running on http://localhost:${PORT}`);
-  console.log(`🔐 Security: Helmet | JWT | bcrypt | Rate limiting | Input validation`);
-  console.log(`📖 Health check: http://localhost:${PORT}/api/health\n`);
+  console.log(
+    `🔐 Security: Helmet | JWT | bcrypt | Input validation`
+  );
+  console.log(
+    `📖 Health check: http://localhost:${PORT}/api/health\n`
+  );
 });
